@@ -1,14 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Simple Calculator</title>
+  <title>Colorful Calculator</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    input { margin: 5px; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #f0f8ff, #e6ffe6);
+      text-align: center;
+      padding-top: 50px;
+      animation: fadeIn 2s ease-in;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      cursor: pointer;
+    }
+
+    #result {
+      font-size: 1.5em;
+      color: #333;
+      margin-top: 20px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
-  <h2>Add Two Numbers</h2>
+  <h2>🎯 Add Two Numbers</h2>
   <input type="number" id="num1" placeholder="First number">
   <input type="number" id="num2" placeholder="Second number">
   <button onclick="calculate()">Add</button>
