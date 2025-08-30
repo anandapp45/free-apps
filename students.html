@@ -1,45 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Student Data</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <title>Student Marks</title>
+
+  <!-- Styling -->
   <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 20px;
+    }
+
     table {
       border-collapse: collapse;
-      width: 60%;
+      width: 80%;
       margin: 20px auto;
     }
+
     th, td {
       border: 1px solid #aaa;
-      padding: 8px;
+      padding: 10px;
       text-align: center;
     }
+
     th {
-      background-color: #f2f2f2;
+      background-color: #e0e0e0;
+    }
+
+    canvas {
+      display: block;
+      margin: 40px auto;
     }
   </style>
+
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <!-- JS Libraries -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <h2 style="text-align:center;">📋 Student Marks</h2>
-  <table id="studentTable"></table>
 
-<script>
-  fetch('students.csv')
-    .then(response => response.text())
-    .then(csv => {
-      const parsed = Papa.parse(csv, { header: true }).data;
-      const table = document.getElementById('studentTable');
-      let html = '<tr><th>Name</th><th>Roll</th><th>Marks</th></tr>';
+  <h2>📋 Student Marks Dashboard</h2>
 
-      parsed.forEach(row => {
-        if (row.Name && row.Roll && row.Marks) {
+  <!-- Table -->
+  <table id="studentTable" class="display"></table>
+
+  <!-- Chart -->
+  <canvas id="marksChart" width="600" height="400"></canvas>
+
+  <!-- Script -->
+  <script>
+    fetch('students.csv')
+      .then(response => response.text())
+      .then(csv => {
+        const parsed = Papa.parse(csv, { header: true }).data;
+        const filtered = parsed.filter(row => row.Name && row.Roll && row.Marks);
+
+        // Build Table
+        const table = $('#studentTable');
+        let html = '<thead><tr><th>Name</th><th>Roll</th><th>Marks</th></tr></thead><tbody>';
+        filtered.forEach(row => {
           html += `<tr><td>${row.Name}</td><td>${row.Roll}</td><td>${row.Marks}</td></tr>`;
-        }
-      });
+        });
+        html += '</tbody>';
+        table.html(html);
+        table.DataTable();
 
-      table.innerHTML = html;
-    });
-</script>
+        // Build Chart
+        const names = filtered.map(row => row.Name);
+        const marks = filtered.map(row => parseInt(row.Marks));
+        new Chart(document.getElementById('marksChart'), {
+          type: 'bar',
+          data: {
+            labels: names,
+            datasets: [{
+              label: 'Marks',
+              data: marks,
+              backgroundColor: '#4CAF50'
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: 'Student Marks Chart'
+              }
+            }
+          }
+        });
+      });
+  </script>
 </body>
 </html>
-
