@@ -23,18 +23,23 @@
   <h2 style="text-align:center;">📋 Student Marks</h2>
   <table id="studentTable"></table>
 
-  <script>
-    fetch('students.csv')
-      .then(response => response.text())
-      .then(csv => {
-        const data = Papa.parse(csv, { header: true }).data;
-        const table = document.getElementById('studentTable');
-        let html = '<tr><th>Name</th><th>Roll</th><th>Marks</th></tr>';
-        data.forEach(row => {
+<script>
+  fetch('students.csv')
+    .then(response => response.text())
+    .then(csv => {
+      const parsed = Papa.parse(csv, { header: true }).data;
+      const table = document.getElementById('studentTable');
+      let html = '<tr><th>Name</th><th>Roll</th><th>Marks</th></tr>';
+
+      parsed.forEach(row => {
+        if (row.Name && row.Roll && row.Marks) {
           html += `<tr><td>${row.Name}</td><td>${row.Roll}</td><td>${row.Marks}</td></tr>`;
-        });
-        table.innerHTML = html;
+        }
       });
-  </script>
+
+      table.innerHTML = html;
+    });
+</script>
 </body>
 </html>
+
